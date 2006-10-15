@@ -1,0 +1,21 @@
+<assembly>
+	<id>workdir-linux</id>
+	<formats>
+		<format>jar</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>src/main/bin/linux</directory>
+			<outputDirectory>${finalName}-workdir-linux/bin</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>src/main</directory>
+			<outputDirectory>${finalName}-workdir-linux</outputDirectory>
+			<includes>
+				<include>w32api/**/*</include>
+				<include>head/**/*</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+</assembly>

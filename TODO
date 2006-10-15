@@ -1,0 +1,9 @@
++ Instead of distributing all the binary files together,
+  distrubte them separately and pull down the right one as needed, based on a system property.
+  Look at maven-dependency-plugin for code on grabbing dependencies--and unpacking them.
+
+- give version ranges for our dependencies so we play nice in people's projects.
+
++ By default, generate the <cp> element automatically from the dependencies.
+
+- What is up with downloading xstream every time?

@@ -1,0 +1,21 @@
+<assembly>
+	<id>workdir-win32</id>
+	<formats>
+		<format>jar</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<fileSet>
+			<directory>src/main/bin/win32</directory>
+			<outputDirectory>${finalName}-workdir-win32/bin</outputDirectory>
+		</fileSet>
+		<fileSet>
+			<directory>src/main</directory>
+			<outputDirectory>${finalName}-workdir-win32</outputDirectory>
+			<includes>
+				<include>w32api/**/*</include>
+				<include>head/**/*</include>
+			</includes>
+		</fileSet>
+	</fileSets>
+</assembly>
