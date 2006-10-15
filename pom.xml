@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.akathist.maven.plugins.l4j</groupId>
+  <groupId>com.akathist.maven.plugins.launch4j</groupId>
   <artifactId>maven-launch4j-plugin</artifactId>
   <packaging>maven-plugin</packaging>
   <version>1.0-SNAPSHOT</version>
@@ -108,10 +108,10 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 					  <goals><goal>attached</goal></goals>
 					  <configuration>
 						  <descriptors>
-							  <descriptor>assemble-linux.xml</descriptor>
-							  <descriptor>assemble-win32.xml</descriptor>
-							  <descriptor>assemble-mac.xml</descriptor>
-							  <descriptor>assemble-solaris.xml</descriptor>
+							  <descriptor>src/main/assembly/assemble-linux.xml</descriptor>
+							  <descriptor>src/main/assembly/assemble-win32.xml</descriptor>
+							  <descriptor>src/main/assembly/assemble-mac.xml</descriptor>
+							  <descriptor>src/main/assembly/assemble-solaris.xml</descriptor>
 						  </descriptors>
 					  </configuration>
 				  </execution>

@@ -16,7 +16,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
  */
-package com.akathist.maven.plugins.l4j;
+package com.akathist.maven.plugins.launch4j;
 
 import net.sf.launch4j.Builder;
 import net.sf.launch4j.BuilderException;
@@ -437,7 +437,7 @@ public class Launch4jMojo extends AbstractMojo {
 			throw new MojoExecutionException("Sorry, Launch4j doesn't support the '" + os + "' OS.");
 		}
 
-		return factory.createArtifactWithClassifier("com.akathist.maven.plugins.l4j", "maven-launch4j-plugin",
+		return factory.createArtifactWithClassifier("com.akathist.maven.plugins.launch4j", "maven-launch4j-plugin",
 				getMyVersion(), "jar", "workdir-" + plat);
 	}
 
@@ -458,7 +458,7 @@ public class Launch4jMojo extends AbstractMojo {
 			Plugin p = (Plugin)i.next();
 			if (log.isDebugEnabled()) log.debug(p.getGroupId() + " ## " + p.getArtifactId() + " ## " + p.getVersion());
 			if ("maven-launch4j-plugin".equals(p.getArtifactId()) &&
-					"com.akathist.maven.plugins.l4j".equals(p.getGroupId())) {
+					"com.akathist.maven.plugins.launch4j".equals(p.getGroupId())) {
 				String v = p.getVersion();
 				log.debug("Found launch4j version " + v);
 				return v;
