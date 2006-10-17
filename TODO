@@ -14,3 +14,5 @@
 
 + Add license comment blocks to all files.
 
++ Rename from maven-launch4j-plugin to launch4j-maven-plugin.
+

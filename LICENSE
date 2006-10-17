@@ -1,4 +1,4 @@
-Maven Launch4j Plugin
+Maven Launch4j Plugin 1.0
 A plugin for using Launch4j in Maven projects.
 
 Copyright (c) 2006 Paul Jungwirth
@@ -17,7 +17,7 @@ You should have received a copy of the GNU General Public License
 along with this program; if not, write to the Free Software
 Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-A complete copy of this license may be found in src/main/legal/LICENSE.txt.
+A complete copy of this license may be found in src/main/legal/LICENSE.txt of the source distribution.
 
 
 

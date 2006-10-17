@@ -437,7 +437,7 @@ public class Launch4jMojo extends AbstractMojo {
 			throw new MojoExecutionException("Sorry, Launch4j doesn't support the '" + os + "' OS.");
 		}
 
-		return factory.createArtifactWithClassifier("com.akathist.maven.plugins.launch4j", "maven-launch4j-plugin",
+		return factory.createArtifactWithClassifier("com.akathist.maven.plugins.launch4j", "launch4j-maven-plugin",
 				getMyVersion(), "jar", "workdir-" + plat);
 	}
 
@@ -457,7 +457,7 @@ public class Launch4jMojo extends AbstractMojo {
 		while (i.hasNext()) {
 			Plugin p = (Plugin)i.next();
 			if (log.isDebugEnabled()) log.debug(p.getGroupId() + " ## " + p.getArtifactId() + " ## " + p.getVersion());
-			if ("maven-launch4j-plugin".equals(p.getArtifactId()) &&
+			if ("launch4j-maven-plugin".equals(p.getArtifactId()) &&
 					"com.akathist.maven.plugins.launch4j".equals(p.getGroupId())) {
 				String v = p.getVersion();
 				log.debug("Found launch4j version " + v);
