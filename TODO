@@ -20,3 +20,4 @@
 
 - Use maven to generate a source distro for this plugin.
 
+- Move this to public svn (sourceforge?)
