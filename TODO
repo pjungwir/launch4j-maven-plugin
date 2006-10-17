@@ -16,3 +16,7 @@
 
 + Rename from maven-launch4j-plugin to launch4j-maven-plugin.
 
+- Use mvn site to generate a site for this plugin.
+
+- Use maven to generate a source distro for this plugin.
+
