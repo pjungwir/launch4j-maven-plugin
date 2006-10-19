@@ -16,8 +16,37 @@
 
 + Rename from maven-launch4j-plugin to launch4j-maven-plugin.
 
-- Use mvn site to generate a site for this plugin.
++ Use mvn site to generate a site for this plugin.
+    - javadoc should include private fields.
+	- put something like the README in the index.html file.
 
-- Use maven to generate a source distro for this plugin.
++ Use maven to generate a source distro for this plugin.
 
-- Move this to public svn (sourceforge?)
+- Move this to public svn (sourceforge?).
+
+- Use maven release to release new versions.
+
+- Add to <classPath>:
+	<excludes>
+		<exclude>
+			<groupId></groupId>
+			<artifactId></artifactId>
+		</exclude>
+		...
+	</excludes>
+
+- Use ftp in <distributionManagement> to make updating my online repository easy.
+  But don't put this in the POM with username & password, because that gets posted publicly!
+    - getting NPE from ftp-wagon. See configuration on BBWM 69.
+
+- add a snapshot repository, too.
+
+- Don't run launch4j unless the inputs are newer than the output?
+
++ Improve logic on whether to unjar:
+    + After unjarring, write the marker file.
+	+ If the marker is there and newer than the jar, don't unjar.
+	+ But if the jar is newer, unjar anyway.
+	+ After unjarring, either write the marker file or touch it.
+
+

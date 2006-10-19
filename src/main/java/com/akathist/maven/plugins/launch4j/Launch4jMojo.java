@@ -77,7 +77,7 @@ public class Launch4jMojo extends AbstractMojo {
 	 * @required
 	 * @readonly
 	 */
-	private Collection plugins;
+	private List plugins;
 
 	/**
 	 * Used to unjar the platform-specific workdir.
@@ -350,11 +350,19 @@ public class Launch4jMojo extends AbstractMojo {
 	 * Writes a marker file to prevent unzipping more than once.
 	 */
 	private File unpackWorkDir(Artifact a) throws MojoExecutionException {
+		String version = a.getVersion();
 		File platJar = a.getFile();
 		File dest = platJar.getParentFile();
 		File marker = new File(dest, platJar.getName() + ".unpacked");
 
-		if (!marker.exists()) {
+		// If the artifact is a SNAPSHOT, then a.getVersion() will report the long timestamp,
+		// but getFile() will be 1.1-SNAPSHOT.
+		// Since getFile() doesn't use the timestamp, all timestamps wind up in the same place.
+		// Therefore we need to expand the jar every time, if the marker file is stale.
+		if (marker.exists() && marker.lastModified() > platJar.lastModified()) {
+		// if (marker.exists() && marker.platJar.getName().indexOf("SNAPSHOT") == -1) {
+			getLog().info("Platform-specific work directory already exists: " + dest.getAbsolutePath());
+		} else {
 			try {
 				UnArchiver un = archiverManager.getUnArchiver(platJar);
 				un.setSourceFile(platJar);
@@ -371,11 +379,10 @@ public class Launch4jMojo extends AbstractMojo {
 
 			try {
 				marker.createNewFile();
+				marker.setLastModified(new Date().getTime());
 			} catch (IOException e) {
 				getLog().warn("Trouble creating marker file " + marker, e);
 			}
-		} else {
-			getLog().info("Platform-specific work directory already exists.");
 		}
 
 		String n = platJar.getName();
