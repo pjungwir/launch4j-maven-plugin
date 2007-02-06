@@ -99,7 +99,11 @@ Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
     <dependency>
       <groupId>org.codehaus.plexus</groupId>
       <artifactId>plexus-archiver</artifactId>
-	  <version>[1.0-alpha-7,)</version>
+	  <!--
+	  Watch out! 1.0-alpha-8 requires us to include lots of plexus configuration info.
+	  Compare maven-assembly-plugin 2.1 vs. trunk.
+	  -->
+	  <version>[1.0-alpha-6,1.0-alpha-7]</version>
     </dependency>
     <dependency>
       <groupId>junit</groupId>

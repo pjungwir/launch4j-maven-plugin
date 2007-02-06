@@ -138,7 +138,7 @@ public class Launch4jMojo extends AbstractMojo {
 	 * The name of the executable you want launch4j to produce.
 	 * The path, if relative, is relative to the pom.xml.
 	 *
-	 * @parameter default-value="target/${project.artifactId}.exe"
+	 * @parameter default-value="${project.build.directory}/${project.artifactId}.exe"
 	 */
 	private File outfile;
 
@@ -153,7 +153,7 @@ public class Launch4jMojo extends AbstractMojo {
 	 * your own code plus all your dependencies, or you should distribute your dependencies alongside
 	 * the executable.
 	 *
-	 * @parameter default-value="${basedir}/target/${project.build.finalName}.jar"
+	 * @parameter default-value="${project.build.directory}/${project.build.finalName}.jar"
 	 */
 	private String jar;
 
@@ -510,10 +510,10 @@ public class Launch4jMojo extends AbstractMojo {
 		}
 		if (classPath != null) {
 			log.debug("classPath.mainClass = " + classPath.mainClass);
-			log.debug("classPath.cp = " + classPath.addDependencies);
-			log.debug("classPath.cp = " + classPath.jarLocation);
-			log.debug("classPath.cp = " + classPath.preCp);
-			log.debug("classPath.cp = " + classPath.postCp);
+			log.debug("classPath.addDependencies = " + classPath.addDependencies);
+			log.debug("classPath.jarLocation = " + classPath.jarLocation);
+			log.debug("classPath.preCp = " + classPath.preCp);
+			log.debug("classPath.postCp = " + classPath.postCp);
 		} else {
 			log.info("classpath = null");
 		}
