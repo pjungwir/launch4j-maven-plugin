@@ -403,7 +403,7 @@ public class Launch4jMojo extends AbstractMojo {
 			} catch (InterruptedException e) {
 				getLog().warn("Interrupted while chmodding platform-specific binaries", e);
 			} catch (IOException e) {
-				getLog().warn("Unable to set platform-specific binaries to 775", e);
+				getLog().warn("Unable to set platform-specific binaries to 755", e);
 			}
 		}
 	}
