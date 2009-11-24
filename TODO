@@ -35,9 +35,9 @@
 		...
 	</excludes>
 
-- Use ftp in <distributionManagement> to make updating my online repository easy.
++ Use ftp in <distributionManagement> to make updating my online repository easy.
   But don't put this in the POM with username & password, because that gets posted publicly!
-    - getting NPE from ftp-wagon. See configuration on BBWM 69.
+    + getting NPE from ftp-wagon. (this was because I was missing a matching <server> in ~/.m2/settings.xml)
 
 - add a snapshot repository, too.
 

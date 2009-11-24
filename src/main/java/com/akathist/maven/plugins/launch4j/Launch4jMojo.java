@@ -35,13 +35,9 @@ import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.Plugin;
 
-import org.codehaus.plexus.archiver.UnArchiver;
-import org.codehaus.plexus.archiver.ArchiverException;
-import org.codehaus.plexus.archiver.manager.ArchiverManager;
-import org.codehaus.plexus.archiver.manager.NoSuchArchiverException;
-
 import java.util.*;
 import java.io.*;
+import java.util.jar.*;
 
 /**
  * Wraps a jar in a Windows executable.
@@ -80,18 +76,10 @@ public class Launch4jMojo extends AbstractMojo {
 	private List plugins;
 
 	/**
-	 * Used to unjar the platform-specific workdir.
-	 *
-	 * @parameter expression="${component.org.codehaus.plexus.archiver.manager.ArchiverManager}"
-	 * @required
-	 * @readonly
-	 */
-	private ArchiverManager archiverManager;
-
-	/**
 	 * Used to look up Artifacts in the remote repository.
 	 *
-	 * @parameter expression="${component.org.apache.maven.artifact.factory.ArtifactFactory}"
+	 * @@@parameter expression="${component.org.apache.maven.artifact.factory.ArtifactFactory}"
+	 * @component
 	 * @required
 	 * @readonly
 	 */
@@ -363,18 +351,46 @@ public class Launch4jMojo extends AbstractMojo {
 		// if (marker.exists() && marker.platJar.getName().indexOf("SNAPSHOT") == -1) {
 			getLog().info("Platform-specific work directory already exists: " + dest.getAbsolutePath());
 		} else {
+			JarFile jf = null;
 			try {
-				UnArchiver un = archiverManager.getUnArchiver(platJar);
-				un.setSourceFile(platJar);
-				un.setDestDirectory(dest);
-				un.extract();
-			} catch (NoSuchArchiverException e) {
-				getLog().error(e);
-				throw new MojoExecutionException("Don't know how to unarchive files like " + platJar, e);
+				// trying to use plexus-archiver here is a miserable waste of time:
+				jf = new JarFile(platJar);
+				Enumeration en = jf.entries();
+				while (en.hasMoreElements()) {
+					JarEntry je = (JarEntry)en.nextElement();
+					File outFile = new File(dest, je.getName());
+					File parent = outFile.getParentFile();
+					if (parent != null) parent.mkdirs();
+					if (je.isDirectory()) {
+						outFile.mkdirs();
+					} else {
+						InputStream in = jf.getInputStream(je);
+						byte[] buf = new byte[1024];
+						int len;
+						FileOutputStream fout = null;
+						try {
+							fout = new FileOutputStream(outFile);
+							while ((len = in.read(buf)) >= 0) {
+								fout.write(buf, 0, len);
+							}
+							fout.close();
+							fout = null;
+						} finally {
+							if (fout != null) {
+								try {
+									fout.close();
+								} catch (IOException e2) {} // ignore
+							}
+						}
+						outFile.setLastModified(je.getTime());
+					}
+				}
 			} catch (IOException e) {
-				throw new MojoExecutionException("IO Error unarchiving " + platJar, e);
-			} catch (ArchiverException e) {
 				throw new MojoExecutionException("Error unarchiving " + platJar, e);
+			} finally {
+				try {
+					if (jf != null) jf.close();
+				} catch (IOException e) {} // ignore
 			}
 
 			try {
