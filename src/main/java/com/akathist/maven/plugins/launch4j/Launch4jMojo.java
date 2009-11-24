@@ -454,7 +454,7 @@ public class Launch4jMojo extends AbstractMojo {
 			plat = "linux";
 		} else if ("Solaris".equals(os) || "SunOS".equals(os)) {
 			plat = "solaris";
-		} else if ("Mac OS X".equals(os)) {
+		} else if ("Mac OS X".equals(os) || "Darwin".equals(os)) {
 			plat = "mac";
 		} else {
 			throw new MojoExecutionException("Sorry, Launch4j doesn't support the '" + os + "' OS.");

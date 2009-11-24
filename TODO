@@ -49,4 +49,13 @@
 	+ But if the jar is newer, unjar anyway.
 	+ After unjarring, either write the marker file or touch it.
 
+- dontWrapJar doesn't work?
+	from an email:
+	However (sorry!) I can't get <dontWrapJar> to work.  I have tried every combination of "target/" or "./", including using backslashes (in case of a platform specific-issue) but each results in:
+	"Specify runtime path of the jar relative to executable"
+
+	I would expect the following config should have worked. I have confirmed that it works from the root of the project using the commandline launch4j.
+
+	<outfile>target/app.exe</outfile>
+	<jar>app-1.0.jar</jar>
 
