@@ -2,21 +2,33 @@
 	Launch4j (http://launch4j.sourceforge.net/)
 	Cross-platform Java application wrapper for creating Windows native executables.
 
-	Copyright (C) 2004, 2006 Grzegorz Kowal
+	Copyright (c) 2004, 2007 Grzegorz Kowal
 
-	This program is free software; you can redistribute it and/or modify
-	it under the terms of the GNU General Public License as published by
-	the Free Software Foundation; either version 2 of the License, or
-	(at your option) any later version.
+	All rights reserved.
 
-	This program is distributed in the hope that it will be useful,
-	but WITHOUT ANY WARRANTY; without even the implied warranty of
-	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-	GNU General Public License for more details.
+	Redistribution and use in source and binary forms, with or without modification,
+	are permitted provided that the following conditions are met:
 
-	You should have received a copy of the GNU General Public License
-	along with this program; if not, write to the Free Software
-	Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
+	    * Redistributions of source code must retain the above copyright notice,
+	      this list of conditions and the following disclaimer.
+	    * Redistributions in binary form must reproduce the above copyright notice,
+	      this list of conditions and the following disclaimer in the documentation
+	      and/or other materials provided with the distribution.
+	    * Neither the name of the Launch4j nor the names of its contributors
+	      may be used to endorse or promote products derived from this software without
+	      specific prior written permission.
+
+	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+	"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+	LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+	A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+	CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+	EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+	PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+	PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+	LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+	NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+	SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
 /*
@@ -28,8 +40,10 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import net.sf.launch4j.binding.InvariantViolationException;
 import net.sf.launch4j.config.Config;
@@ -40,12 +54,16 @@ import net.sf.launch4j.config.ConfigPersister;
  */
 public class Builder {
 	private final Log _log;
-
-	private File _basedir;
-	public void setBasedir(File f) { _basedir = f; }
+	private final File _basedir;
 
 	public Builder(Log log) {
 		_log = log;
+		_basedir = Util.getJarBasedir();
+	}
+
+	public Builder(Log log, File basedir) {
+		_log = log;
+		_basedir = basedir;
 	}
 
 	/**
@@ -65,7 +83,6 @@ public class Builder {
 		FileOutputStream os = null;
 		final RcBuilder rcb = new RcBuilder();
 		try {
-			if (_basedir == null) _basedir = Util.getJarBasedir();
 			rc = rcb.build(c);
 			ro = Util.createTempFile("o");
 			outfile = ConfigPersister.getInstance().getOutputFile();
@@ -118,7 +135,7 @@ public class Builder {
 				if (e.getErrLine() != -1) {
 					_log.append(Messages.getString("Builder.line.has.errors",
 							String.valueOf(e.getErrLine())));
-					if (e.getErrLine() > 0) _log.append(rcb.getLine(e.getErrLine()));
+					_log.append(rcb.getLine(e.getErrLine()));
 				} else {
 					_log.append(Messages.getString("Builder.generated.resource.file"));
 					_log.append(rcb.getContent());
@@ -135,14 +152,12 @@ public class Builder {
 }
 
 class Cmd {
-	private final StringBuffer _sb = new StringBuffer();
+	private final List _cmd = new ArrayList();
 	private final File _basedir;
 	private final File _bindir;
-	private final boolean _quote;
 
 	public Cmd(File basedir) {
 		_basedir = basedir;
-		_quote = basedir.getPath().indexOf(' ') != -1;
 		String path = System.getProperty("launch4j.bindir");
 		if (path == null) {
 			_bindir = new File(basedir, "bin");
@@ -153,48 +168,28 @@ class Cmd {
 	}
 
 	public Cmd add(String s) {
-		space();
-		_sb.append(s);
+		StringTokenizer st = new StringTokenizer(s);
+		while (st.hasMoreTokens()) {
+			_cmd.add(st.nextToken());
+		}
 		return this;
 	}
 
 	public Cmd addAbsFile(File file) {
-		space();
-		boolean quote = file.getPath().indexOf(' ') != -1;
-		if (quote) {
-			_sb.append('"');
-		}
-		_sb.append(file.getPath());
-		if (quote) {
-			_sb.append('"');
-		}
+		_cmd.add(file.getPath());
 		return this;
 	}
 
 	public Cmd addFile(String pathname) {
-		space();
-		if (_quote) {
-			_sb.append('"');
-		}
-		_sb.append(new File(_basedir, pathname).getPath());
-		if (_quote) {
-			_sb.append('"');
-		}
+		_cmd.add(new File(_basedir, pathname).getPath());
 		return this;
 	}
 
 	public Cmd addExe(String pathname) {
-		space();
-		if (_quote) {
-			_sb.append('"');
-		}
 		if (Util.WINDOWS_OS) {
 			pathname += ".exe";
 		}
-		_sb.append(new File(_bindir, pathname).getPath());
-		if (_quote) {
-			_sb.append('"');
-		}
+		_cmd.add(new File(_bindir, pathname).getPath());
 		return this;
 	}
 
@@ -205,17 +200,8 @@ class Cmd {
 		return this;
 	}
 
-	private void space() {
-		if (_sb.length() > 0) {
-			_sb.append(' ');
-		}
-	}
-	
-	public String toString() {
-		return _sb.toString();
-	}
-
 	public void exec(Log log) throws ExecException {
-		Util.exec(_sb.toString(), log);
+		String[] cmd = (String[]) _cmd.toArray(new String[_cmd.size()]);
+		Util.exec(cmd, log);
 	}
 }

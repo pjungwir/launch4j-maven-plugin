@@ -62,7 +62,7 @@ public class Jre {
 	 *
 	 * @parameter default-value=false
 	 */
-	boolean dontUsePrivateJres;
+	String jdkPreference;
 
 	/**
 	 * Sets java's initial heap size in MB, like the -Xms flag.
@@ -70,9 +70,19 @@ public class Jre {
 	int initialHeapSize;
 
 	/**
+	 * Sets java's initial heap size in percent of free memory.
+	 */
+	int initialHeapPercent;
+
+	/**
 	 * Sets java's maximum heap size in MB, like the -Xmx flag.
 	 */
 	int maxHeapSize;
+
+	/**
+	 * Sets java's maximum heap size in percent of free memory.
+	 */
+	int maxHeapPercent;
 
 	/**
 	 * Use this to pass arbitrary options to the java/javaw program.
@@ -92,9 +102,11 @@ public class Jre {
 		ret.setPath(path);
 		ret.setMinVersion(minVersion);
 		ret.setMaxVersion(maxVersion);
-		ret.setDontUsePrivateJres(dontUsePrivateJres);
-		ret.setInitialHeapSize(initialHeapSize);
-		ret.setMaxHeapSize(maxHeapSize);
+		ret.setJdkPreference(jdkPreference);
+		ret.setInitialHeapSize(new Integer(initialHeapSize));
+		ret.setInitialHeapPercent(new Integer(initialHeapPercent));
+		ret.setMaxHeapSize(new Integer(maxHeapSize));
+		ret.setMaxHeapPercent(new Integer(maxHeapPercent));
 		ret.setOptions(opts);
 
 		return ret;

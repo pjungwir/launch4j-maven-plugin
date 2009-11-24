@@ -59,3 +59,8 @@
 	<outfile>target/app.exe</outfile>
 	<jar>app-1.0.jar</jar>
 
+- support l4j 3.0.1
+
+- support bundling the JRE (or figure out what parameters already allow this)
+
+

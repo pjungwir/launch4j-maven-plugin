@@ -162,6 +162,20 @@ public class Launch4jMojo extends AbstractMojo {
 	private String errTitle;
 
 	/**
+	 * downloadUrl (?)
+	 *
+	 * @parameter
+	 */
+	private String downloadUrl;
+
+	/**
+	 * supportUrl (?)
+	 *
+	 * @parameter
+	 */
+	private String supportUrl;
+
+	/**
 	 * Constant command line arguments to pass to your program's main method.
 	 * Actual command line arguments entered by the user will appear after these.
 	 *
@@ -177,6 +191,13 @@ public class Launch4jMojo extends AbstractMojo {
 	 * @parameter
 	 */
 	private String chdir;
+
+	/**
+	 * priority (?)
+	 *
+	 * @parameter
+	 */
+	private String priority;
 
 	/**
 	 * Sets the process name to the executable filename (instead of java) and uses XP-style manifests (if any).
@@ -240,6 +261,13 @@ public class Launch4jMojo extends AbstractMojo {
 	private ClassPath classPath;
 
 	/**
+	 * Details about whether to run as a single instance.
+	 *
+	 * @parameter
+	 */
+	private SingleInstance singleInstance;
+
+	/**
 	 * Details about the splash screen.
 	 *
 	 * @parameter
@@ -252,6 +280,13 @@ public class Launch4jMojo extends AbstractMojo {
 	 * @parameter
 	 */
 	private VersionInfo versionInfo;
+
+	/**
+	 * Various messages you can display.
+	 *
+	 * @parameter
+	 */
+	private Messages messages;
 
 	private File getJar() {
 		File f = new File(jar);
@@ -269,8 +304,11 @@ public class Launch4jMojo extends AbstractMojo {
 		c.setJar(getJar());
 		c.setDontWrapJar(dontWrapJar);
 		c.setErrTitle(errTitle);
+		c.setDownloadUrl(downloadUrl);
+		c.setSupportUrl(supportUrl);
 		c.setCmdLine(cmdLine);
 		c.setChdir(chdir);
+		c.setPriority(priority);
 		c.setCustomProcName(customProcName);
 		c.setStayAlive(stayAlive);
 		c.setIcon(icon);
@@ -290,12 +328,13 @@ public class Launch4jMojo extends AbstractMojo {
 		if (versionInfo != null) {
 			c.setVersionInfo(versionInfo.toL4j());
 		}
+		if (messages != null) {
+			c.setMessages(messages.toL4j());
+		}
 
 		ConfigPersister.getInstance().setAntConfig(c, getBaseDir());
-		Builder b = new Builder(new MavenLog(getLog()));
-
 		File workdir = setupBuildEnvironment();
-		b.setBasedir(workdir);
+		Builder b = new Builder(new MavenLog(getLog()), workdir);
 
 		try {
 			b.build();
@@ -505,21 +544,32 @@ public class Launch4jMojo extends AbstractMojo {
 		log.debug("jar = " + jar);
 		log.debug("dontWrapJar = " + dontWrapJar);
 		log.debug("errTitle = " + errTitle);
+		log.debug("downloadUrl = " + downloadUrl);
+		log.debug("supportUrl = " + supportUrl);
 		log.debug("cmdLine = " + cmdLine);
 		log.debug("chdir = " + chdir);
+		log.debug("priority = " + priority);
 		log.debug("customProcName = " + customProcName);
 		log.debug("stayAlive = " + stayAlive);
 		log.debug("icon = " + icon);
 		log.debug("objs = " + objs);
 		log.debug("libs = " + libs);
 		log.debug("vars = " + vars);
+		if (singleInstance != null) {
+			log.debug("singleInstance.mutexName = " + singleInstance.mutexName);
+			log.debug("singleInstance.windowTitle = " + singleInstance.windowTitle);
+		} else {
+			log.debug("singleInstance = null");
+		}
 		if (jre != null) {
 			log.debug("jre.path = " + jre.path);
 			log.debug("jre.minVersion = " + jre.minVersion);
 			log.debug("jre.maxVersion = " + jre.maxVersion);
-			log.debug("jre.dontUsePrivateJres = " + jre.dontUsePrivateJres);
+			log.debug("jre.jdkPreference = " + jre.jdkPreference);
 			log.debug("jre.initialHeapSize = " + jre.initialHeapSize);
+			log.debug("jre.initialHeapPercent = " + jre.initialHeapPercent);
 			log.debug("jre.maxHeapSize = " + jre.maxHeapSize);
+			log.debug("jre.maxHeapPercent = " + jre.maxHeapPercent);
 			log.debug("jre.opts = "+ jre.opts);
 		} else {
 			log.debug("jre = null");
@@ -554,6 +604,14 @@ public class Launch4jMojo extends AbstractMojo {
 			log.debug("versionInfo.originalFilename = " + versionInfo.originalFilename);
 		} else {
 			log.debug("versionInfo = null");
+		}
+		if (messages != null) {
+			log.debug("messages.startupErr = " + messages.startupErr);
+			log.debug("messages.bundledJreErr = " + messages.bundledJreErr);
+			log.debug("messages.jreVersionErr = " + messages.jreVersionErr);
+			log.debug("messages.launcherErr = " + messages.launcherErr);
+		} else {
+			log.debug("messages = null");
 		}
 	}
 
