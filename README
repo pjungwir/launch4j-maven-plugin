@@ -1,4 +1,4 @@
-Maven Launch4j Plugin 1.0
+Maven Launch4j Plugin 1.3
 A plugin for using Launch4j in Maven projects.
 Copyright (c) 2006 Paul Jungwirth
 16 October 2006
@@ -18,7 +18,7 @@ information on this file. You can also set your configuration via the Launch4j
 GUI.
 
 The Maven plugin for Launch4j lets you generate the Launch4j executable as part 
-of the Maven build process. It supports Maven 2.0.4 and Launch4j 3.0.0-pre1. 
+of the Maven build process. It supports Maven 2.0.4 and Launch4j 3.0.1.
 You don't have to download Launch4j; all the necessary files are included in 
 the plugin. (The plugin does not include Launch4j's GUI option.) Depending on 
 your operating system, the plugin will download an additional artifact 
