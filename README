@@ -254,5 +254,4 @@ to create separate executables for each. Then your POM would look like this:
   </project>
 
 
-If you have any questions, you can send a note to maven {a} 9stmaryrd * com.
-
+If you have any questions, just send me a note.
